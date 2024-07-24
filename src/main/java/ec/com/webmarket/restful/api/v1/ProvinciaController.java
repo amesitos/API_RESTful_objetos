@@ -17,38 +17,39 @@ import ec.com.webmarket.restful.security.ApiResponseDTO;
 import ec.com.webmarket.restful.service.crud.ProvinciaService;
 import jakarta.validation.Valid;
 
-@RestController
-@RequestMapping(value = { ApiConstants.URI_API_V1_PROVINCIA })
-public class ProvinciaController {
+@RestController // Manejarán las solicitudes HTTP y devolverán respuestas en formato JSON o XML.
+@RequestMapping(value = { ApiConstants.URI_API_V1_PROVINCIA }) // define la URL base para las rutas de este controlador. 
+public class ProvinciaController { 
 
-	@Autowired
+	@Autowired // Inyectar automáticamente una instancia de ProvinciaService en el controlador.
 	private ProvinciaService entityService;
 
 	@GetMapping
-	public ResponseEntity<?> getAll() {
+	public ResponseEntity<?> getAll() { // // Llama al servicio para obtener todos.
+		// Envuelve la respuesta en un objeto ApiResponseDTO que contiene todos los datos
 		return new ResponseEntity<>(new ApiResponseDTO<>(true, entityService.findAll(new ProvinciaDTO())),
 				HttpStatus.OK);
 	}
 
-	@PostMapping
-	public ResponseEntity<?> create(@RequestBody ProvinciaDTO dto) {
+	@PostMapping // Manejará las solicitudes HTTP POST a la URI base.
+	public ResponseEntity<?> create(@RequestBody ProvinciaDTO dto) { // Llama al servicio para crear una nueva provincia
 		return new ResponseEntity<>(new ApiResponseDTO<>(true, entityService.create(dto)), HttpStatus.CREATED);
 	}
 
-	@PutMapping
-	public ResponseEntity<?> update(@RequestBody ProvinciaDTO dto) {
+	@PutMapping // Manejará las solicitudes HTTP PUT a la URI base.
+	public ResponseEntity<?> update(@RequestBody ProvinciaDTO dto) { // deserializa el cuerpo de la solicitud en un objeto ProvinciaDTO para actualizar.
 		return new ResponseEntity<>(new ApiResponseDTO<>(true, entityService.update(dto)), HttpStatus.OK);
 	}
 
-	@GetMapping("/{id}/archivo/id")
-	public ResponseEntity<?> getById(@Valid @PathVariable Long id) {
-		ProvinciaDTO dto = new ProvinciaDTO();
+	@GetMapping("/{id}/archivo/id") // Manejará las solicitudes HTTP GET a la URI 
+	public ResponseEntity<?> getById(@Valid @PathVariable Long id) { // Extrae el valor del ID de la URI y lo pasa al método.
+		ProvinciaDTO dto = new ProvinciaDTO(); // Se crea un nuevo ProvinciaDTO y se establece el ID para obtener la provincia con ese ID.
 		dto.setId(id);
 		return new ResponseEntity<>(new ApiResponseDTO<>(true, entityService.find(dto)), HttpStatus.OK);
 	}
 
-	@GetMapping("/{paisId}/archivo/pais")
-	public ResponseEntity<?> getProvinciasByPais(@PathVariable Long paisId) {
+	@GetMapping("/{paisId}/archivo/pais") // Manejará las solicitudes HTTP GET a la URI 
+	public ResponseEntity<?> getProvinciasByPais(@PathVariable Long paisId) { // extrae el id del país y lo pasa al método.
 		return new ResponseEntity<>(new ApiResponseDTO<>(true, entityService.findByPais(paisId)), HttpStatus.OK);
 	}
 }

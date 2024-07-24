@@ -19,38 +19,39 @@ import ec.com.webmarket.restful.security.ApiResponseDTO;
 import ec.com.webmarket.restful.service.crud.PaisService;
 import jakarta.validation.Valid;
 
-@RestController
-@RequestMapping(value = { ApiConstants.URI_API_V1_PAIS })
+@RestController // Manejarán las solicitudes HTTP y devolverán respuestas en formato JSON o XML.
+@RequestMapping(value = { ApiConstants.URI_API_V1_PAIS }) //  define la URL base para las rutas de este controlador. 
 public class PaisController {
 
-	@Autowired
+	@Autowired // Inyectar automáticamente una instancia de PaisService en el controlador. 
 	private PaisService entityService;
 
-	@GetMapping
-	public ResponseEntity<?> getAll() {
+	@GetMapping // Manejará las solicitudes HTTP GET a la URI base del controlador.
+	public ResponseEntity<?> getAll() { // Llama al servicio para obtener todos los países.
+		//  Envuelve la respuesta en un objeto ApiResponseDTO que contiene todos los datos
 		return new ResponseEntity<>(new ApiResponseDTO<>(true, entityService.findAll(new PaisDTO())), HttpStatus.OK);
 	}
 
-	@PostMapping
-	public ResponseEntity<?> create(@RequestBody PaisDTO dto) {
+	@PostMapping // Manejará las solicitudes HTTP POST a la URI base.
+	public ResponseEntity<?> create(@RequestBody PaisDTO dto) { // Llama al servicio para crear un nuevo país
 		return new ResponseEntity<>(new ApiResponseDTO<>(true, entityService.create(dto)), HttpStatus.CREATED);
 	}
 
-	@PutMapping
-	public ResponseEntity<?> update(@RequestBody PaisDTO dto) {
+	@PutMapping // Manejará las solicitudes HTTP PUT a la URI base.
+	public ResponseEntity<?> update(@RequestBody PaisDTO dto) { // deserializa el cuerpo de la solicitud en un objeto PaisDTO para actualizar.
 		return new ResponseEntity<>(new ApiResponseDTO<>(true, entityService.update(dto)), HttpStatus.OK);
 	}
 
-	@GetMapping("/{id}/archivo/id")
-	public ResponseEntity<?> getById(@Valid @PathVariable Long id) {
-		PaisDTO dto = new PaisDTO();
+	@GetMapping("/{id}/archivo/id") // Manejará las solicitudes HTTP GET a la URI 
+	public ResponseEntity<?> getById(@Valid @PathVariable Long id) { // Extrae el valor del ID de la URI y lo pasa al método.
+		PaisDTO dto = new PaisDTO(); // Se crea un nuevo PaisDTO y se establece el ID para obtener el país con ese ID.
 		dto.setId(id);
 		return new ResponseEntity<>(new ApiResponseDTO<>(true, entityService.find(dto)), HttpStatus.OK);
 	}
 
-	@GetMapping("/{fechaCreacion}/archivo/fecha-creacion")
-	public ResponseEntity<?> getPaisesByFechaCreacion(@PathVariable String fechaCreacion) {
-		LocalDate fecha = LocalDate.parse(fechaCreacion); // return
+	@GetMapping("/{fechaCreacion}/archivo/fecha-creacion") // Manejará las solicitudes HTTP GET a la URI 
+	public ResponseEntity<?> getPaisesByFechaCreacion(@PathVariable String fechaCreacion) { // extrae la fecha de la URI y la pasa al método.
+		LocalDate fecha = LocalDate.parse(fechaCreacion); // Convierte la fecha en formato String a un objeto LocalDate.
 		entityService.findByFechaCreacion(fecha);
 		return new ResponseEntity<>(new ApiResponseDTO<>(true, entityService.findByFechaCreacion(fecha)),
 				HttpStatus.OK);
